@@ -28,13 +28,19 @@ number_char(Num, Char) :-
   string_chars(Str, [Char]),
   number_string(Num, Str).
 
+string_numbers(Str, Nums) :-
+  string_chars(S, Chars),
+  convlist([Char, Num] >> number_char(Num, Char), Chars, Nums).
+
+solve(S, Ret) :-
+  string_numbers(Str, Nums),
+  foldl(plus, Nums, 0, Ret).
+
 main :-
   read_string(S),
-  string_chars(S, Chars),
-  convlist([Char, Num] >> number_char(Num, Char), Chars, Nums),
-  foldl(plus, Nums, 0, Ret),
+  solve(S, Ret),
   write(Ret).
 
 :- main.
 
-% https://atcoder.jp/contests/abs/submissions/15390370
+% https://atcoder.jp/contests/abs/submissions/16065978

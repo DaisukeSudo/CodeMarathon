@@ -11,15 +11,18 @@ read_number(Num) :-
 format_result(0, 'Even').
 format_result(1, 'Odd').
 
-main :-
-  read_number(A),
-  read_number(B),
+solve(A, B, Ret) :-
   A1 is A /\ 1,
   B1 is B /\ 1,
   R1 is A1 /\ B1,
-  format_result(R1, R2),
-  write(R2).
+  format_result(R1, Ret).
+
+main :-
+  read_number(A),
+  read_number(B),
+  solve(A, B, Ret),
+  write(Ret).
 
 :- main.
 
-% https://atcoder.jp/contests/abs/submissions/15389747
+% https://atcoder.jp/contests/abs/submissions/16065955

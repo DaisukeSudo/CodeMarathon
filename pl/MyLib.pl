@@ -20,3 +20,7 @@ read_numbers(N, [X|Xs]) :-
 number_char(Num, Char) :-
   string_chars(Str, [Char]),
   number_string(Num, Str).
+
+string_numbers(Str, Nums) :-
+  string_chars(Str, Chars),
+  convlist([Char, Num] >> number_char(Num, Char), Chars, Nums).

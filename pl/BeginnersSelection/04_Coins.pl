@@ -14,15 +14,18 @@ goal(A, B, C, X) :-
   between(0, C, K),
   500 * I + 100 * J + 50 * K =:= X.
 
+solve(A, B, C, X, Ret) :-
+  findall(_, goal(A, B, C, X), List),
+  length(List, Ret).
+
 main :-
   read_number(A),
   read_number(B),
   read_number(C),
   read_number(X),
-  findall(_, goal(A, B, C, X), List),
-  length(List, Ret),
+  solve(A, B, C, X, Ret),
   write(Ret).
 
 :- main.
 
-% https://atcoder.jp/contests/abs/submissions/16065812
+% https://atcoder.jp/contests/abs/submissions/16066001
