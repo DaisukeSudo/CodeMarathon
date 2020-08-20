@@ -1,12 +1,12 @@
 % https://atcoder.jp/contests/abs/tasks/abc086_a
 
-read_string(String) :-
+read_string(Str) :-
   current_input(Input),
-  read_string(Input, ' \n', '', _, String).
+  read_string(Input, ' \n', '', _, Str).
 
-read_number(Number) :-
-  read_string(String),
-  number_string(Number, String).
+read_number(Num) :-
+  read_string(Str),
+  number_string(Num, Str).
 
 format_result(0, 'Even').
 format_result(1, 'Odd').
