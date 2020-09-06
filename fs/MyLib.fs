@@ -14,7 +14,7 @@ stdin.ReadLine()
 
 // 空白区切り → 数値のリスト
 stdin.ReadLine()
-|> fun x -> x.Split(' ')
+|> fun x -> x.Split()
 |> Seq.map int
 |> Seq.toList
 |> printfn "%A"
@@ -22,21 +22,19 @@ stdin.ReadLine()
 // Ｎ件の改行区切り → 数値のリスト
 stdin.ReadLine()
 |> int
-|> fun n -> [1..n]
-|> List.map (fun _ -> stdin.ReadLine() |> int)
+|> fun n -> List.init n (fun _ -> stdin.ReadLine() |> int)
 |> printfn "%A"
 
 // Ｎ件の改行区切り＋各行空白区切り → 数値のタプルのリスト
 stdin.ReadLine()
 |> int
-|> fun n -> [1..n]
-|> List.map (fun _ -> stdin.ReadLine() |> fun x -> x.Split(' ') |> Array.map int |> fun x -> (x.[0], x.[1]))
+|> fun n -> List.init n (fun _ -> stdin.ReadLine() |> fun x -> x.Split() |> Array.map int |> fun x -> (x.[0], x.[1]))
 |> Seq.sortWith (fun (x1, _) (x2, _) -> x1 - x2)
 |> printfn "%A"
 
 // 空白区切り → 任意の個数のタプル
 stdin.ReadLine()
-|> fun x -> x.Split(' ')
+|> fun x -> x.Split()
 |> Array.map int
 |> fun x -> (x.[0], x.[1], x.[2], x.[3])
 |> fun (a, b, c, d) -> (a, b, c, d)
@@ -156,13 +154,11 @@ let looseDistinct: 'a [] -> 'a [] =
 // 配列の更新
 let updateArray : int -> 'a -> 'a [] -> 'a [] =
   fun i v arr ->
-    arr
-    |> foldi (
-      fun acc i2 _ ->
-        if i = i2
-        then Array.concat [ acc.[0..(i - 1)]; [| v |]; acc.[(i + 1)..] ]
-        else acc
-    ) arr
+    Array.concat [ arr.[0..(i - 1)]; [| v |]; arr.[(i + 1)..] ]
+
+let updateArrayB : int -> 'a -> 'a [] -> 'a [] =
+  fun i v arr ->
+    (arr.[i] <- v) |> fun () -> arr
 
 // ２次元配列の作成
 let createArray2 : int -> int -> 'a -> 'a [] [] =
@@ -208,6 +204,13 @@ let dividArray : int -> int -> 'a [] -> 'a [] [] =
             Array.append acc.[i2] [| elem |]
           )
     ) (Array.create length [||])
+
+// 無限シーケンス
+Seq.initInfinite (fun i -> (i, "ora"))
+|> Seq.takeWhile (fun (i, _) -> i < 10)
+|> Seq.map (fun (_, v) -> v)
+|> Seq.toList
+|> printfn "%A"
 
 
 // ----- マッチング -----
