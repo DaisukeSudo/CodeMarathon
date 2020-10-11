@@ -20,6 +20,21 @@ read_numbers(N, [X|Xs]) :-
   N1 is N - 1,
   read_numbers(N1, Xs).
 
+read_numbers2(0, _, []).
+read_numbers2(H, W, [Xs|Xss]) :-
+  read_numbers(W, Xs),
+  H1 is H - 1,
+  read_numbers2(H1, W, Xss).
+
+
+% ----- 出力 -----
+
+format_result(0, 'Even').
+format_result(1, 'Odd').
+
+result_y('Yes').
+result_n('No').
+
 
 % ----- 変換 -----
 
