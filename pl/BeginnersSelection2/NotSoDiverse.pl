@@ -14,20 +14,21 @@ read_numbers(N, [X|Xs]) :-
   N1 is N - 1,
   read_numbers(N1, Xs).
 
-count_in_list(N, [], C, C).
-count_in_list(N, [X|Xs], A, C) :-
-  (N =:= X -> A1 is A + 1; A1 is A),
-  count_in_list(N, Xs, A1, C).
-count_in_list(N, List, C) :-
-  count_in_list(N, List, 0, C).
+count_by_group([], DictR, DictR).
+count_by_group([X|Xs], DictA, DictR) :-
+  (get_dict(X, DictA, V) -> V1 is V + 1; V1 is 1),
+  put_dict(X, DictA, V1, DictA1),
+  count_by_group(Xs, DictA1, DictR).
+count_by_group(List, DictR) :-
+  count_by_group(List, dict{}, DictR).
 
-count_by_group([], _, Cs, Cs).
-count_by_group([X|Xs], List, As, Cs) :-
-  count_in_list(X, List, A),
-  count_by_group(Xs, List, [A|As], Cs).
-count_by_group(Xs, List, [A|As], Cs).
-count_by_group(Distincted,List, C) :-
-  count_by_group(Distincted, List, [], C).
+dict_values([], _, VsR, VsR).
+dict_values([K|Ks], Dict, VsA, VsR) :-
+  get_dict(K, Dict, V),
+  dict_values(Ks, Dict, [V|VsA], VsR).
+dict_values(Dict, Values) :-
+  dict_keys(Dict, Keys),
+  dict_values(Keys, Dict, [], Values).
 
 take_number(0, _, 0) :- !.
 take_number(_, [], 0) :- !.
@@ -37,11 +38,11 @@ take_number(N, [X|Xs], C) :-
   C is C1 + X.
 
 solve(N, K, As, Ret) :-
-  sort(0, @>, As, Distincted),
-  length(Distincted, DistinctedSize),
-  ChangeCount is max(0, DistinctedSize - K),
-  count_by_group(Distincted, As, GroupCounts),
-  sort(0, @=<, GroupCounts, Sorted),
+  count_by_group(As, Dict),
+  dict_values(Dict, Counts),
+  length(Counts, Size),
+  ChangeCount is max(0, Size - K),
+  sort(0, @=<, Counts, Sorted),
   take_number(ChangeCount, Sorted, Ret).
 
 main :-
@@ -54,3 +55,4 @@ main :-
 :- main.
 
 % https://atcoder.jp/contests/abc081/submissions/17326076 (TLE)
+% https://atcoder.jp/contests/abc081/submissions/17328394 (TLE)

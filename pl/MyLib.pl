@@ -41,12 +41,18 @@ count_in_list(N, [X|Xs], A, C) :-
 count_in_list(N, List, C) :-
   count_in_list(N, List, 0, C).
 
-count_by_group([], _, Cs, Cs).
-count_by_group([X|Xs], List, As, Cs) :-
-  writeln(([X|Xs], List, As)),
-  count_in_list(X, List, A),
-  count_by_group(Xs, List, [A|As], Cs).
-count_by_group(Xs, List, [A|As], Cs).
-count_by_group(List, C) :-
-  sort(0, @>, List, Distincted),
-  count_by_group(Distincted, List, [], C).
+count_by_group([], DictR, DictR).
+count_by_group([X|Xs], DictA, DictR) :-
+  (get_dict(X, DictA, V) -> V1 is V + 1; V1 is 1),
+  put_dict(X, DictA, V1, DictA1),
+  count_by_group(Xs, DictA1, DictR).
+count_by_group(List, DictR) :-
+  count_by_group(List, dict{}, DictR).
+
+dict_values([], _, VsR, VsR).
+dict_values([K|Ks], Dict, VsA, VsR) :-
+  get_dict(K, Dict, V),
+  dict_values(Ks, Dict, [V|VsA], VsR).
+dict_values(Dict, Values) :-
+  dict_keys(Dict, Keys),
+  dict_values(Keys, Dict, [], Values).
