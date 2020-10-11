@@ -49,6 +49,10 @@ string_numbers(Str, Nums) :-
 
 % ----- カウント -----
 
+digits_number(Num, Len) :-
+  number_string(Num, Str),
+  string_length(Str, Len).
+
 count_in_list(N, [], C, C).
 count_in_list(N, [X|Xs], A, C) :-
   (N =:= X -> A1 is A + 1; A1 is A),
