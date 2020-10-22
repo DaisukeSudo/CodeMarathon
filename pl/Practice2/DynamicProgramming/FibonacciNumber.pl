@@ -8,16 +8,15 @@ read_number(Num) :-
   read_string(Str),
   number_string(Num, Str).
 
-fib(P1, P2, 0, Ret) :-
-  Ret is P1.
+fib(Ret, _, 0, Ret).
 fib(P1, P2, I, Ret) :-
-  I > 0,
   N1 is P1 + P2,
   N2 is P1,
-  NI is I - 1,
-  fib(N1, N2, NI, Ret).
+  I1 is I - 1,
+  fib(N1, N2, I1, Ret).
 
 solve(N, Ret) :-
+  N >= 0,
   fib(1, 0, N, Ret).
 
 main :-
