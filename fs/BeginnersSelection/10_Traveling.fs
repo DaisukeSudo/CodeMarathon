@@ -41,7 +41,11 @@ stdin.ReadLine()
 |> int
 |> fun x -> [1..x]
 |> List.map (
-  fun _ -> stdin.ReadLine() |> fun x -> x.Split(' ') |> Array.map int |> Array.toList |> fun x -> (x.[0], x.[1], x.[2])
+  fun _ ->
+    stdin.ReadLine()
+    |> fun x -> x.Split(' ')
+    |> Array.map int
+    |> fun x -> (x.[0], x.[1], x.[2])
 )
 |> List.fold (
   fun acc (t2, x2, y2) ->

@@ -45,8 +45,7 @@ stdin.ReadLine()
   |> List.filter (
     fun ni ->
       ni.ToString()
-      |> fun x -> x.ToCharArray(0, x.Length)
-      |> Array.sumBy (fun x -> x.ToString() |> int)
+      |> Seq.sumBy (string >> int)
       |> fun x -> x >= a && x <= b
   )
   |> List.sum
