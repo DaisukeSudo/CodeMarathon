@@ -1,5 +1,7 @@
 // http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DPL_1_B
 
+// mutable version
+
 stdin.ReadLine() |> fun x -> x.Split(' ') |> Array.map int |> fun x -> (x.[0], x.[1])
 |> fun (n, tw) ->
   Array.init n (fun _ -> stdin.ReadLine() |> fun x -> x.Split(' ') |> Array.map int |> fun x -> (x.[0], x.[1]))
@@ -41,3 +43,24 @@ stdin.ReadLine() |> fun x -> x.Split(' ') |> Array.map int |> fun x -> (x.[0], x
 
 // output:
 // 13
+
+
+// immutable version
+
+stdin.ReadLine() |> fun x -> x.Split(' ') |> Array.map int |> fun x -> (x.[0], x.[1])
+|> fun (n, tw) ->
+  Array.init n (fun _ -> stdin.ReadLine() |> fun x -> x.Split(' ') |> Array.map int |> fun x -> (x.[0], x.[1]))
+  |> Array.unzip
+  |> fun (vs : int [], ws : int [])  ->
+    [0..(n - 1)]
+    |> List.fold (
+      fun (memo : int []) i ->
+        [| 0..tw |]
+        |> Array.map (
+          fun w ->
+            (if w >= ws.[i] then memo.[w - ws.[i]] + vs.[i] else 0)
+            |> max memo.[w]
+        )
+    ) (Array.create (tw + 1) 0)
+    |> Array.last
+|> printfn "%d"
