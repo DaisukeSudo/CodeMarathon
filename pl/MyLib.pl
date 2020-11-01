@@ -1,5 +1,22 @@
 % ----- 入力 -----
 
+read_char(Char) :-
+  current_input(Input),
+  read_string(Input, 1, Char).
+
+read_chars(0, []).
+read_chars(N, [X|Xs]) :-
+  read_char(X),
+  N1 is N - 1,
+  read_chars(N1, Xs).
+
+read_chars2(0, _, []).
+read_chars2(H, W, [Xs|Xss]) :-
+  read_chars(W, Xs),
+  read_char(N),
+  H1 is H - 1,
+  read_chars2(H1, W, Xss).
+
 read_string(Str) :-
   current_input(Input),
   read_string(Input, ' \n', '', _, Str).
@@ -9,6 +26,12 @@ read_strings(N, [X|Xs]) :-
   read_string(X),
   N1 is N - 1,
   read_strings(N1, Xs).
+
+read_strings2(0, _, []).
+read_strings2(H, W, [Xs|Xss]) :-
+  read_strings(W, Xs),
+  H1 is H - 1,
+  read_strings2(H1, W, Xss).
 
 read_number(Num) :-
   read_string(Str),
@@ -34,6 +57,17 @@ format_result(1, 'Odd').
 
 result_y('Yes').
 result_n('No').
+
+write_line([]).
+write_line([S|Ss]) :-
+  write(S),
+  write_line(Ss).
+
+write_lines([]).
+write_lines([Ss|Sss]) :-
+  write_line(Ss),
+  writeln(""),
+  write_lines(Sss).
 
 
 % ----- 変換 -----
@@ -75,3 +109,18 @@ dict_values([K|Ks], Dict, VsA, VsR) :-
 dict_values(Dict, Values) :-
   dict_keys(Dict, Keys),
   dict_values(Keys, Dict, [], Values).
+
+
+% ----- リスト -----
+
+combinePair([], _, []) :- !.
+combinePair(_, [], []) :- !.
+combinePair([A|As], Bs, Css) :-
+  combinePair1(A, Bs, Cs1),
+  combinePair(As, Bs, Cs2),
+  append(Cs1, Cs2, Css).
+
+combinePair1(_, [], []).
+combinePair1(A, [B|Bs], [C|Cs]) :-
+  C = (A, B),
+  combinePair1(A, Bs, Cs).
