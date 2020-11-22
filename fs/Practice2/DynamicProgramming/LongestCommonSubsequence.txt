@@ -1,0 +1,15 @@
+3
+abcbdab
+bdcaba
+abc
+abc
+abc
+bc
+
+3
+abcdefghijklmnopqrstuvwxyz
+abcdefghijklmnopqrstuvwxyz
+aabacdaefaghaijaklamnaopaqrastauvawxayza
+xabxcdxefxghxijxklxmnxopxqrxstxuvxwxxyzx
+aabacdaefaghaijaklamnaopaqrastauvawxayzababbcdbefbghbijbklbmnbopbqrbstbuvbwxbyzb
+xabxcdxefxghxijxklxmnxopxqrxstxuvxwxxyzxyabycdyefyghyijyklymnyopyqrystyuvywxyyzy
