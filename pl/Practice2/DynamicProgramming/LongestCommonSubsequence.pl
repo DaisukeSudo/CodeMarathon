@@ -25,12 +25,14 @@ match_item(_, _, M, _, M, U, U) :- !.
 match_line(_, [], _, _, [], _).
 match_line(X, [Y|Ys], M0, [M1|Ms], [M2|Ms2], U1) :-
   match_item(X, Y, M0, M1, M2, U1, U2),
+  writeln(["X", X, "Y", Y, M0, M1, M2, U1, U2]),
   match_line(X, Ys, M2, Ms, Ms2, U2).
 match_line(X, Ys, [M0|Ms], Ms2) :-
   match_line(X, Ys, M0, Ms, Ms2, false).
 
 match_lines([], _, Ret, Ret).
 match_lines([X|Xs], Ys, Ms, Ret) :-
+  writeln(["X", X, Ms]),
   match_line(X, Ys, Ms, Ms2),
   match_lines(Xs, Ys, Ms2, Ret).
 
