@@ -118,26 +118,21 @@ combinePair [1..9] [1..9]
 let combineSequence =
   fun list ->
     list
-    |> List.tail
-    |> List.fold (
+    |> Seq.tail
+    |> Seq.fold (
       fun acc i ->
         acc
-        |> List.collect (
+        |> Seq.collect (
           fun cs ->
             list
-            |> List.except cs
-            |> List.map (fun x -> cs @ [x])
+            |> Seq.except cs
+            |> Seq.map (fun x -> cs @ [x])
         )
-    ) (list |> List.map (fun x -> [x]))
+    ) (list |> Seq.map (fun x -> [x]))
 
 // 組み合わせ：順列：サンプル
 combineSequence [1..4]
 |> Seq.iter (printfn "%A")
-
-
-// 配列の前後に最初と最後の要素を追加
-let reinforce: 'a [] -> 'a [] =
-  fun arr -> Array.concat [[| arr.[0] |]; arr; [| arr.[arr.Length - 1] |]]
 
 // 連続する同値を除去
 let looseDistinct: 'a [] -> 'a [] =
@@ -150,12 +145,26 @@ let looseDistinct: 'a [] -> 'a [] =
     ) (arr |> Array.mapi (fun i x -> i, x)) []
     |> Seq.toArray
 
+// 無限シーケンス
+Seq.initInfinite (fun i -> (i, "ora"))
+|> Seq.takeWhile (fun (i, _) -> i < 10)
+|> Seq.map (fun (_, v) -> v)
+|> Seq.toList
+|> printfn "%A"
 
-// 配列の更新
+
+// ----- 配列 -----
+
+// 配列の前後に最初と最後の要素を追加
+let reinforce: 'a [] -> 'a [] =
+  fun arr -> Array.concat [[| arr.[0] |]; arr; [| arr.[arr.Length - 1] |]]
+
+// 配列の更新（非破壊）
 let updateArray : int -> 'a -> 'a [] -> 'a [] =
   fun i v arr ->
     Array.concat [ arr.[0..(i - 1)]; [| v |]; arr.[(i + 1)..] ]
 
+// 配列の更新（破壊）
 let updateArrayB : int -> 'a -> 'a [] -> 'a [] =
   fun i v arr ->
     (arr.[i] <- v) |> fun () -> arr
@@ -205,12 +214,28 @@ let dividArray : int -> int -> 'a [] -> 'a [] [] =
           )
     ) (Array.create length [||])
 
-// 無限シーケンス
-Seq.initInfinite (fun i -> (i, "ora"))
-|> Seq.takeWhile (fun (i, _) -> i < 10)
-|> Seq.map (fun (_, v) -> v)
-|> Seq.toList
-|> printfn "%A"
+// 配列を２倍にする
+let doubleArray : 'a [] -> 'a [] =
+  fun arr -> Array.concat [ arr; arr ]
+
+
+// ----- 再帰 -----
+
+(
+  [| fun _ _ -> 0 |]
+)
+|> fun (fnc: (int -> int -> int) []) ->
+  (
+    fun start count ->
+      printfn "%d" count
+      if count = 1
+      then start
+      else (fnc.[0] start (count - 1))
+  )
+  |> fun fn ->
+    (fnc.[0] <- fn)
+    |> fun () -> fn 123 10
+|> printfn "%d"
 
 
 // ----- マッチング -----
