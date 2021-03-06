@@ -25,34 +25,34 @@
             then
               yield!
                 [
-                  (vx, t, d, time, memo.[vx ^^^ (1 <<< t)].[s]);
-                  (vx, s, d, time, memo.[vx ^^^ (1 <<< s)].[t]);
+                  (vx, t, vx ^^^ (1 <<< t), s, d, time);
+                  (vx, s, vx ^^^ (1 <<< s), t, d, time);
                 ]
           };
           seq {
-            for vx in [(1 <<< n) - 1] do
             for (s, t, d, time) in graph do
             if s = 0
-            then yield (0, 0, d, time, memo.[vx].[t])
+            then yield (0, 0, (1 <<< n) - 1, t, d, time)
           };
         ]
         |> Seq.concat
-        |> Seq.filter (
-          fun (vx, x, d, time, (prevCost, prevCount)) ->
-            prevCost <> System.Int64.MaxValue && prevCost + d <= time
-        )
         |> Seq.iter (
-          fun (vx, x, d, time, (prevCost, prevCount)) ->
-            (memo.[vx].[x], (prevCost + d))
-            |> fun ((accCost, accCount), curCost) ->
-              match vx with
-              | _ when curCost < accCost -> (curCost, prevCount)
-              | _ when curCost = accCost -> (accCost, accCount + prevCount)
-              | _ -> (accCost, accCount)
-            |> fun v -> memo.[vx].[x] <- v
+          fun (i, j, i2, j2, d, time) ->
+            memo.[i2].[j2]
+            |> fun (preV, preC) ->
+              if preV <> System.Int64.MaxValue && preV + d <= time
+              then (
+                (memo.[i].[j], (preV + d))
+                |> fun ((accV, accC), curV) ->
+                  match i with
+                  | _ when curV < accV -> (curV, preC)
+                  | _ when curV = accV -> (accV, accC + preC)
+                  | _ -> (accV, accC)
+                |> fun x -> memo.[i].[j] <- x
+              )
         )
       |> fun _ -> memo.[0].[0]
-|> fun (cost, count) -> if count = 0L then "IMPOSSIBLE" else sprintf "%d %d" cost count
+|> fun (v, c) -> if c = 0L then "IMPOSSIBLE" else sprintf "%d %d" v c
 |> printfn "%s"
 
 // input:
@@ -76,4 +76,4 @@
 // output:
 // 6 2
 
-// https://atcoder.jp/contests/s8pc-1/submissions/20482836
+// https://atcoder.jp/contests/s8pc-1/submissions/20735572
