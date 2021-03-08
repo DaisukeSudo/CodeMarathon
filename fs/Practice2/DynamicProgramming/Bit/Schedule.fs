@@ -24,14 +24,12 @@
         if (j &&& rs.[i] = rs.[i])
         then yield! seq {
           for j2 in 1..7 do
-          if (memo.[i - 1].[j2] > 0)
-            && [0..2] |> List.exists (fun x -> (j >>> x &&& 1 = 1) && (j2 >>> x &&& 1 = 1))
-          then yield (i, j, memo.[i - 1].[j2])
+          if [0..2] |> List.exists (fun x -> (j >>> x &&& 1 = 1) && (j2 >>> x &&& 1 = 1))
+          then yield (i, j, j2)
         }
       }
       |> Seq.iter (
-        fun (i, j, v) ->
-          memo.[i].[j] <- memo.[i].[j] + v % 10007
+        fun (i, j, j2) -> memo.[i].[j] <- memo.[i].[j] + memo.[i - 1].[j2] % 10007
       )
       |> fun _ -> memo.[n] |> Array.sum |> fun v -> v % 10007
 |> printfn "%d"
@@ -66,4 +64,4 @@
 // output:
 // 7
 
-// https://atcoder.jp/contests/joi2014yo/submissions/20780648
+// https://atcoder.jp/contests/joi2014yo/submissions/20781786
