@@ -13,6 +13,13 @@ object Main {
 }
 
 
+// ----- デバッグ -----
+
+implicit class ArrayString[T](x: Array[T]) {
+  def toArrayString: String = x.mkString("[", ",", "]")
+}
+
+
 // ----- シーケンス -----
 
 // 無限シーケンス
@@ -27,9 +34,6 @@ Array.fill[Int](n)(0)
 
 // 配列の生成（連続値）
 Array.range(0, n)
-
-// 配列の表示
-(_.mkString("[", ", ", "]"))
 
 // ２次元配列の生成
 (n => (Array.range(0, n).map(_x => Array.fill[Int](n)(0))))
