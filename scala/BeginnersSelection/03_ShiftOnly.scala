@@ -11,7 +11,7 @@ object Main {
       |> (_ => io.StdIn.readLine)
       |> (_.split(" ").map(_.toInt).reduce((x, a) => x | a))
       |> (_.toBinaryString)
-      |> ((x) => x.length - s.lastIndexOf('1') - 1)
+      |> ((x) => x.length - x.lastIndexOf('1') - 1)
       |> println
   )
 }
