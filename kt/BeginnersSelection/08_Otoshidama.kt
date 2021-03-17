@@ -16,7 +16,7 @@ fun main(args: Array<String>) = (
           ((y - n - 9 * a) / 4)
             .let { b -> "%d %d %d".format(a, b, (n - a - b)) }
         }
-        ?: run { "-1 -1 -1" }
+        ?: "-1 -1 -1"
     )}
     .let(::println)
 )
