@@ -12,14 +12,15 @@ object Main {
       .map(_.toInt)
       |> ((x) => (x(0), x(1), x(2)))
       |> ((n: Int, a: Int, b: Int) =>
-        (1 to n).filter((ni) =>
-          ni.toString
-            .map(_.toString)
-            .map(_.toInt)
-            .sum
-            |> (x => a <= x && x <= b)
-        )
-        .sum
+        (1 to n)
+          .filter((ni) =>
+            ni.toString
+              .map(_.toString)
+              .map(_.toInt)
+              .sum
+              |> (x => a <= x && x <= b)
+          )
+          .sum
       ).tupled
       |> println
   )
