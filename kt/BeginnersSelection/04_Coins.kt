@@ -3,19 +3,17 @@
 import kotlin.math.min
 
 fun main(args: Array<String>) = (
-  Array(4) { _x :Int -> readLine()!!.toInt() }
-  pp { arr: Array<Int>  ->
-    (0..min(arr[0], arr[3] / 500))
-      .map { i: Int ->
-        (0..min(arr[1], (arr[3] - 500 * i) / 100))
-          .filter { j: Int -> arr[3] - 500 * i - 100 * j <= 50 * arr[2] }
-          .size
-      }
-      .sum()
-  }
-  pp ::println
+  Array(4) { _ -> readLine()!!.toInt() }
+    .let { x ->
+      (0..min(x[0], x[3] / 500))
+        .map { i ->
+          (0..min(x[1], (x[3] - 500 * i) / 100))
+            .filter { j -> x[3] - 500 * i - 100 * j <= 50 * x[2] }
+            .size
+        }
+        .sum()
+    }
+    .let(::println)
 )
 
-infix fun <T, R> T.pp(f: (T) -> R): R = f(this)
-
-// https://atcoder.jp/contests/abs/submissions/20985863
+// https://atcoder.jp/contests/abs/submissions/21021840
