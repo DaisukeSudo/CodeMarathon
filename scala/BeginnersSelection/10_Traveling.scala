@@ -17,27 +17,22 @@ object Main {
       ))
       .foldLeft(Option(0, 0, 0)) { case (acc, (t2, x2, y2)) =>
         acc match {
-          case Some((t1, x1, y1)) => (
-            if (
-              ((t2 & 1) == ((x2 + y2) & 1))
-                && ((t2 - t1) >= (math.abs(x2 - x1) + math.abs(y2 - y1)))
-            )
-              Some (t2, x2, y2)
-            else
-              None
-          )
-          case None => None
+          case Some((t1, x1, y1))
+            if (((t2 & 1) == (x2 + y2 & 1))
+              && ((t2 - t1) >= (math.abs(x2 - x1) + math.abs(y2 - y1)))
+            ) => Some((t2, x2, y2))
+          case _ => None
         }
       }
     )
     |> ((x) =>
       x match {
         case Some(x) => "Yes"
-        case None    => "No"
+        case _       => "No"
       }
     )
     |> println
   )
 }
 
-// https://atcoder.jp/contests/abs/submissions/19835524
+// https://atcoder.jp/contests/abs/submissions/21020571
