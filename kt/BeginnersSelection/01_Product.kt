@@ -6,10 +6,8 @@ fun main(args: Array<String>) = (
     .map(String::toInt)
     .map { it and 1 }
     .reduce { a, x -> a and x }
-    pp { if (it == 1) "Odd" else "Even" }
-    pp ::println
+    .let { if (it == 1) "Odd" else "Even" }
+    .let(::println)
 )
 
-infix fun <T, R> T.pp(f: (T) -> R): R = f(this)
-
-// https://atcoder.jp/contests/abs/submissions/20984243
+// https://atcoder.jp/contests/abs/submissions/21020996
