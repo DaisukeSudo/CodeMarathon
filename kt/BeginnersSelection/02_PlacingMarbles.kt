@@ -5,9 +5,7 @@ fun main(args: Array<String>) = (
     .map(Char::toString)
     .map(String::toInt)
     .sum()
-    pp ::println
+    .let(::println)
 )
 
-infix fun <T, R> T.pp(f: (T) -> R): R = f(this)
-
-// https://atcoder.jp/contests/abs/submissions/20984377
+// https://atcoder.jp/contests/abs/submissions/21021050
