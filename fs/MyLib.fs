@@ -80,13 +80,20 @@ let maxOrDefault : 'a -> seq<'a> -> 'a =
   fun state arr ->
     if (arr |> Seq.length > 0) then (arr |> Seq.max) else state
 
-// index 付き fold
+// index 付き fold ※ accumulator に index 入れても OK
 let foldi : ('a -> int -> 'b -> 'a) -> 'a -> seq<'b> -> 'a =
   fun folder state arr ->
     arr
     |> Seq.mapi (fun i x -> i, x)
     |> Seq.fold (fun acc (i, x) -> folder acc i x) state
 
+// 同じ値のカウント
+let groupCount : (seq<'a> -> Map<'a, int>) =
+  fun arr ->
+    arr
+    |> Seq.groupBy id
+    |> Seq.map (fun (k, v) -> (k, v |> Seq.length))
+    |> Map.ofSeq
 
 // 組み合わせ：ペア
 let combinePair : seq<'a> -> seq<'b> -> seq<'a * 'b> =
@@ -217,6 +224,17 @@ let dividArray : int -> int -> 'a [] -> 'a [] [] =
 // 配列を２倍にする
 let doubleArray : 'a [] -> 'a [] =
   fun arr -> Array.concat [ arr; arr ]
+
+// 同じ値 (int) のカウント
+let groupCountToArray : (seq<int> -> int []) =
+  fun arr ->
+    arr
+    |> Seq.groupBy id
+    |> Seq.fold (
+      fun acc (i, v) ->
+        Array.concat [ acc.[0..(i - 1)]; [| v |> Seq.length |]; acc.[(i + 1)..] ]
+      
+    ) (Array.create (arr |> Seq.length) 0)
 
 
 // ----- 再帰 -----
