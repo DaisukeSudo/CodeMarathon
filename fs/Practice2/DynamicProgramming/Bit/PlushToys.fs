@@ -7,31 +7,28 @@ stdin.ReadLine()
 |> fun (n, m) ->
   (
     Array.init n (fun _ -> stdin.ReadLine() |> int |> (+) -1),
+    Array.create m 0,
+    Array.init m (fun _ -> Array.create (n + 1) 0),
     Array.create (1 <<< m) (0, 0)
   )
-  |> fun (items, memo) ->
+  |> fun (items, cs, vss, memo) ->
     items
-    |> Seq.groupBy id
-    |> Seq.fold (
-      fun acc (i, v) ->
-        Array.concat [ acc.[0..(i - 1)]; [| v |> Seq.length |]; acc.[(i + 1)..] ]
-    ) (Array.create m 0)
-    |> fun counts ->
+    |> Array.mapi (
+      fun i x ->
+        (cs.[x] <- cs.[x] + 1),
+        ([0..m - 1] |> List.iter (fun j -> vss.[j].[i + 1] <- cs.[j]))
+    )
+    |> fun _ ->
       [1..(1 <<< m) - 1]
-      |> Seq.iter (
+      |> List.iter (
         fun i ->
           [0..m - 1]
           |> List.filter (fun j -> i &&& (1 <<< j) = (1 <<< j))
           |> List.map (
             fun j ->
-              (
-                memo.[i ^^^ (1 <<< j)],
-                counts.[j]
-              )
-              |> fun ((pc, pv), c) ->
-                items.[pc..pc + c - 1]
-                |> Array.filter ((<>) j)
-                |> Array.length
+              (memo.[i ^^^ (1 <<< j)], cs.[j], vss.[j])
+              |> fun ((pc, pv), c, vs) ->
+                (c - vs.[pc + c] + vs.[pc])
                 |> fun v -> (pc + c, pv + v)
           )
           |> List.minBy (fun (c, v) -> v)
@@ -57,6 +54,17 @@ stdin.ReadLine()
 // 3
 // 4
 
+// cs:
+// [|4; 3; 3; 2|]
+
+// vss:
+// [|
+//   [|0; 1; 1; 1; 1; 1; 2; 2; 2; 3; 4; 4; 4|]
+//   [|0; 0; 0; 1; 1; 2; 2; 3; 3; 3; 3; 3; 3|]
+//   [|0; 0; 1; 1; 1; 1; 1; 1; 2; 2; 2; 3; 3|]
+//   [|0; 0; 0; 0; 1; 1; 1; 1; 1; 1; 1; 1; 2|]
+// |]
+
 // memo:
 // [|
 //   (0, 0)
@@ -79,3 +87,5 @@ stdin.ReadLine()
 
 // output:
 // 7
+
+// https://atcoder.jp/contests/joi2017yo/submissions/21127477
