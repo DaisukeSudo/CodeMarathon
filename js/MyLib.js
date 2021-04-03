@@ -1,3 +1,16 @@
+// ----- 基本 -----
+
+Object.prototype.let = function(f) {
+  return f(this.valueOf());
+}
+
+require('fs')
+  .readFileSync('/dev/stdin', 'utf8')
+  .let(x => x)
+  .let(console.log);
+
+// ----------
+
 const collect = (list, fn) => (
   list && list.map(fn).reduce((acc, x) => acc.concat(x), [])
 );
