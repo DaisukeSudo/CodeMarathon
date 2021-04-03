@@ -10,19 +10,18 @@ object Main {
     io.StdIn.readLine
       .split(" ")
       .map(_.toInt)
-      |> ((a) => (a(0), a(1) / 1000))
+      |> (a => (a(0), a(1) / 1000))
       |> { case (n, y) => (
         (0 to n)
-          .find((a) =>
-            (y - n - 9 * a) % 4 == 0 &&
-              (y - n - 9 * a) >= 0 &&
-              n - a - (y - n - 9 * a) / 4 >= 0
-          )
+          .find(a => (
+            (y - n - 9 * a)
+            |> (x => x % 4 == 0 && x >= 0 && n - a - x / 4 >= 0)
+          ))
           |> ((ao: Option[Int]) =>
             ao match {
               case Some(a) => (
                 ((y - n - 9 * a) / 4)
-                |> ((b: Int) => "%d %d %d".format(a, b, (n - a - b)))
+                |> (b => "%d %d %d".format(a, b, (n - a - b)))
               )
               case None => "-1 -1 -1"
             }
@@ -32,4 +31,4 @@ object Main {
   )
 }
 
-// https://atcoder.jp/contests/abs/submissions/19804500
+// https://atcoder.jp/contests/abs/submissions/21476736

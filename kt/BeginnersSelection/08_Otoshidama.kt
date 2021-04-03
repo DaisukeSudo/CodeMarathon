@@ -8,17 +8,16 @@ fun main(args: Array<String>) = (
     .let { (n, y) -> (
       (0..n)
         .find { a  ->
-          (y - n - 9 * a) % 4 == 0 &&
-            (y - n - 9 * a) >= 0 &&
-            n - a - (y - n - 9 * a) / 4 >= 0
+          (y - n - 9 * a)
+            .let { x -> x % 4 == 0 && x >= 0 && n - a - x / 4 >= 0 }
         }
         ?.let { a ->
           ((y - n - 9 * a) / 4)
-            .let { b -> "%d %d %d".format(a, b, (n - a - b)) }
+            .let { b -> "${a} ${b} ${n - a - b}" }
         }
         ?: "-1 -1 -1"
     )}
     .let(::println)
 )
 
-// https://atcoder.jp/contests/abs/submissions/21004768
+// https://atcoder.jp/contests/abs/submissions/21477216
