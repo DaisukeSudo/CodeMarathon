@@ -9,13 +9,13 @@ require('fs')
   .trim()
   .let(s =>
     ['eraser', 'erase', 'dreamer', 'dream']
-      .reduce(
-        (arr, word) =>
-          [].concat(...arr.map(x => x.split(word).filter(x => x))),
+      .reduce((acc, word) =>
+        [].concat(...acc.map(x => x.split(word).filter(x => x))),
         [s]
       )
-      .length == 0 ? 'YES' : 'NO'
   )
+  .length
+  .let(x => x === 0 ? 'YES' : 'NO')
   .let(console.log);
 
 // https://atcoder.jp/contests/abs/submissions/21477635

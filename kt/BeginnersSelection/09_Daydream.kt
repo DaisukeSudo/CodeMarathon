@@ -9,8 +9,8 @@ fun main(args: Array<String>) = (
             x.split(word).filter { it != "" }
           }
         }
-        .size
     }
+    .size
     .let { if (it == 0) "YES" else "NO" }
     .let(::println)
 )
