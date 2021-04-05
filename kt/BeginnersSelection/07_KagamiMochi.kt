@@ -3,12 +3,10 @@
 fun main(args: Array<String>) = (
   readLine()!!
     .toInt()
-    .let { n ->
-      (1..n)
-        .map { _ -> readLine()!! }
-        .distinct()
-        .size
-    }
+    .let { n -> (1..n) }
+    .map { readLine()!! }
+    .distinct()
+    .size
     .let(::println)
 )
 
