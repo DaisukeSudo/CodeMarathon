@@ -10,8 +10,8 @@ require('fs')
   .split(' ')
   .map(x => +x)
   .sort((a, b) => b - a)
-  .reduce(
-    ([a, b], x, i) => i % 2 == 0
+  .reduce(([a, b], x, i) =>
+    i % 2 == 0
       ? [a + x, b]
       : [a, b + x]
     , [0, 0]
