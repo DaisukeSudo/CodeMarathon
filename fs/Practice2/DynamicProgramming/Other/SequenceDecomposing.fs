@@ -15,7 +15,7 @@ stdin.ReadLine ()
         else
           [1..17]
           |> List.fold (
-            fun (li, ri) i ->
+            fun (li, ri) _ ->
               (li + (ri - li) / 2)
               |> fun mi ->
                 if memo.[mi] < x
