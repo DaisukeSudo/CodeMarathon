@@ -11,18 +11,19 @@ class W:
 W((input(), input(), input(), input())) \
   .map(int) \
   .let(tuple) \
-  .let(lambda t:
-    W(range(0, min([t[0], floor(t[3] / 500)]) + 1)) \
-      .map(lambda i:
-        W(range(0, min([t[1], floor((t[3] - 500 * i) / 100)]) + 1)) \
-          .filter(lambda j: t[3] - 500 * i - 100 * j <= 50 * t[2]) \
-          .let(list)
-          .let(len) \
-          .v
-      ) \
-      .let(sum) \
-      .v
-  ) \
+  .let(lambda t: (
+    lambda a, b, c, x:
+      W(range(0, min(a, floor(x / 500)) + 1)) \
+        .map(lambda i:
+          W(range(0, min(b, floor((x - 500 * i) / 100)) + 1)) \
+            .filter(lambda j: x - 500 * i - 100 * j <= 50 * c) \
+            .let(list) \
+            .let(len) \
+            .v
+        ) \
+        .let(sum) \
+        .v
+  )(t[0], t[1], t[2], t[3])) \
   .let(print)
 
-# https://atcoder.jp/contests/abs/submissions/21624786
+# https://atcoder.jp/contests/abs/submissions/21625388
