@@ -10,6 +10,7 @@ class W:
   let = lambda self, f: W(f(self.v))
   map = lambda self, f: W(map(f, self.v))
   filter = lambda self, f: W(filter(f, self.v))
+  find = lambda self, f: W(next(filter(f, self.v), None))
   reduce = lambda self, f: W(reduce(f, self.v))
   fold = lambda self, f, init: W(reduce(f, self.v, init))
 
