@@ -283,6 +283,12 @@ let matchPN =
     | POSITIVE -> "POSITIVE"
     | NEGATIVE -> "NEGATIVE"
 
+let matchOP =
+  fun ox ->
+    match ox with
+    | Some x -> string x
+    | None -> "None"
+
 
 // ----- 関数 -----
 
