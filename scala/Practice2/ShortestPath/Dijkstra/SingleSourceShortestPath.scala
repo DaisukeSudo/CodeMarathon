@@ -6,50 +6,49 @@ object Main {
     def let[S](f: T => S): S = f(x)
   }
 
-  def main(args: Array[String]) =
+  def main(args: Array[String]) = (
     ((_x: Int) => io.StdIn.readLine.split(" ").map(_.toInt).let(x => (x(0), x(1), x(2))))
       .let(readAsNum3 =>
         (readAsNum3(0)).let { case (v, e, r) =>
           (
-            Array.range(0, e).map(readAsNum3),
-            Array.fill(v)(List[(Int, Int)]()),
-            Array.fill(v)(Int.MaxValue),
-            Array(Set[Int]())
+            Array.range(0, e).map(readAsNum3)
           )
-          .let { case (stds, dict, memo, touched) =>
+          .let(stds =>
             (
-              (stds.foreach { case (s, t, d) => dict(s) = (t, d) :: dict(s) }),
-              (memo(r) = 0)
+              (Array.fill(v)(List[(Int, Int)]()))
+                .let(x => stds.foreach { case (s, t, d) => x(s) = (t, d) :: x(s) }.let(_x => x)),
+              Array.fill(v)(Int.MaxValue).let(x => (x(r) = 0).let(_x => x)),
+              Array.fill(v)(false).let(x => (x(r) = true).let(_x => x))
             )
-            .let(_x => List.range(0, v))
-            .foldLeft(Option(r))((os, _x) =>
-              os match {
-                case Some(s) =>
-                  dict(s)
-                    .filter { case (t, d) => memo(t) > memo(s) + d }
-                    .map { case (t, d) => (memo(t) = memo(s) + d).let(_x => t) }
-                    .toSet
-                    .let(_ ++ touched(0))
-                    .let(ts =>
-                      if (ts.isEmpty)
-                        None
-                      else
-                        ts.minBy(x => memo(x)).let(next =>
-                          (touched(0) = (ts - next)).let(_x => Some(next))
-                        )
-                    )
-                case _ => None
-              }
+          )
+          .let { case (stds, memo, fixed) =>
+            (
+              new scala.collection.mutable.PriorityQueue[Int]()(Ordering.by(memo(_)).reverse)
             )
-            .let(_x =>
-              memo
-                .map(x => if (x == Int.MaxValue) "INF" else x.toString)
-                .mkString("\n")
+            .let(q =>
+              List.range(1, v).foldLeft(Option(r))((os, _x) =>
+                os match {
+                  case Some(s) =>
+                    stds(s)
+                      .filter { case (t, d) => memo(t) > memo(s) + d }
+                      .foreach { case (t, d) => (memo(t) = memo(s) + d).let(_x => q += t) }
+                      .let(_x => fixed(s) = true)
+                      .let(_x => LazyList.continually(q.dequeue))
+                      .takeWhile(_x => !q.isEmpty)
+                      .filter(!fixed(_))
+                      .headOption
+                  case _ => None
+                }
+              )
             )
+            .let(_x => memo)
           }
         }
       )
+      .map(x => if (x == Int.MaxValue) "INF" else x.toString)
+      .mkString("\n")
       .let(println)
+  )
 }
 
 // https://judge.u-aizu.ac.jp/onlinejudge/review.jsp?rid=5390699
