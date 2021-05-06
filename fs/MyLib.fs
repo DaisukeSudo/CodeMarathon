@@ -41,6 +41,12 @@ stdin.ReadLine()
 |> printfn "%A"
 
 
+// ----- ファイル -----
+
+let stdin = new System.IO.StreamReader("finepath")
+stdin.ReadLine () |> printfn "%s"
+
+
 // ----- シーケンス -----
 
 // 基本

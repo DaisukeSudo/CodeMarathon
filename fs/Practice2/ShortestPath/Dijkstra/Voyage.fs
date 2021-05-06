@@ -5,10 +5,9 @@ stdin.ReadLine().Split()
 |> fun x -> (x.[0], x.[1])
 |> fun (n, k) ->
   (
-    Array.create (n + 1) Map.empty,
-    [|[]|]
+    Array.create (n + 1) Map.empty
   )
-  |> fun (fares: Map<int, int64>[], results) ->
+  |> fun fares ->
     (
       (
         fun a b ->
@@ -43,7 +42,6 @@ stdin.ReadLine().Split()
                   |> fun _ -> ns
             ) a
             |> fun _ -> if memo.[b] = System.Int64.MaxValue then -1L else memo.[b]
-            |> fun result -> results.[0] <- result :: results.[0]
       ),
       (
         fun c d e ->
@@ -61,19 +59,23 @@ stdin.ReadLine().Split()
       )
     )
     |> fun (f0, f1) ->
-      [1..k]
-      |> List.iter(fun _ ->
-        stdin.ReadLine().Split()
-        |> Array.map int
-        |> fun x ->
-          match x.[0] with
-          | 0 -> f0 x.[1] x.[2]
-          | _ -> f1 x.[1] x.[2] (int64 x.[3])
+      (
+        [|[]|]
       )
-    |> fun _ -> results.[0]
+      |> fun (results) ->
+        [1..k]
+        |> List.iter (fun _ ->
+          stdin.ReadLine().Split()
+          |> Array.map int
+          |> fun x ->
+            match x.[0] with
+            | 0 -> (f0 x.[1] x.[2]) |> fun r -> results.[0] <- r :: results.[0]
+            | _ -> (f1 x.[1] x.[2] (int64 x.[3]))
+        )
+        |> fun _ -> results.[0]
     |> Seq.rev
     |> Seq.map string
     |> String.concat "\n"
 |> printfn "%s"
 
-// https://atcoder.jp/contests/joi2008yo/submissions/22262584
+// https://atcoder.jp/contests/joi2008yo/submissions/22350184
