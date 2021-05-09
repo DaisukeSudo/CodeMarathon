@@ -21,12 +21,12 @@ let priorityQueueBy<'a, 'b when 'b : comparison> =
                   )
                   |> fun (i, j) ->
                     (binaryHeap.[i], binaryHeap.[j])
-                    |> fun ((a, pa), (b, pb)) ->
-                      if pa > pb
+                    |> fun (a, b) ->
+                      if (a |> snd) > (b |> snd)
                       then
                         (
-                          (binaryHeap.[i] <- (b, pb)),
-                          (binaryHeap.[j] <- (a, pa))
+                          (binaryHeap.[i] <- b),
+                          (binaryHeap.[j] <- a)
                         )
                         |> fun _ -> x.[0] <- j
                       else
@@ -53,12 +53,12 @@ let priorityQueueBy<'a, 'b when 'b : comparison> =
                     (if j = n - 1 || (binaryHeap.[j] |> snd) > (binaryHeap.[j + 1] |> snd) then j else j + 1)
                     |> fun j ->
                       (binaryHeap.[i], binaryHeap.[j])
-                      |> fun ((a, pa), (b, pb)) ->
-                        if pa < pb
+                      |> fun (a, b) ->
+                        if (a |> snd) < (b |> snd)
                         then
                           (
-                            (binaryHeap.[i] <- (b, pb)),
-                            (binaryHeap.[j] <- (a, pa))
+                            (binaryHeap.[i] <- b),
+                            (binaryHeap.[j] <- a)
                           )
                           |> fun _ -> x.[0] <- j
                         else
