@@ -4,16 +4,14 @@
   readline()
   |> split
   |> a -> parse.(Int, a)
-  |> t -> (
-    (n, a, b) ->
-      filter(i -> (
-        [parse.(Int, c) for c = string(i)]
-        |> sum
-        |> x -> a <= x && x <= b
-      ), (1 : n))
-  )(t[1], t[2], t[3])
+  |> ((n, a, b),) ->
+    filter(i -> (
+      [parse.(Int, c) for c = string(i)]
+      |> sum
+      |> x -> a <= x && x <= b
+    ), (1 : n))
   |> sum
   |> println
 )
 
-# https://atcoder.jp/contests/abs/submissions/22577839
+# https://atcoder.jp/contests/abs/submissions/22656922
