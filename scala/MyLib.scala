@@ -26,6 +26,9 @@ implicit class ArrayString[T](x: Array[T]) {
 Stream.continually(io.StdIn.readLine())
   .takeWhile(_ != "0")
 
+Iterator.continually(io.StdIn.readLine())
+  .takeWhile(_ != "0")
+  .toArray
 
 // ----- 配列 -----
 
