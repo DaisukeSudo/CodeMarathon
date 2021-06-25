@@ -16,12 +16,12 @@ let readInput = fun () ->
       k
     )
 
-let findRoot = fun (table: int []) (x: int) ->
-  [| true |]
+let findTree = fun (table: int []) (x: int) ->
+  ([| true |])
   |> fun next ->
     Seq.initInfinite ignore
     |> Seq.takeWhile (fun () -> next.[0])
-    |> Seq.fold (
+    |> Seq.scan (
       fun current _ ->
         table.[current]
         |> fun parent ->
@@ -29,7 +29,29 @@ let findRoot = fun (table: int []) (x: int) ->
           then (next.[0] <- false) |> fun _ -> current
           else parent
     ) x
-    |> fun root -> (table.[x] <- root) |> fun () -> root
+    |> Seq.rev
+    |> Seq.toList
+    |> fun tree ->
+      match tree with
+      | root::items -> (root, items)
+      | _ -> (x, [])
+    |> fun (root, items) -> items |> List.iter (fun item -> table.[item] <- root) |> fun () -> root
+
+let updateRoot = fun (table: int []) (x: int) (root: int) ->
+  ([| true |])
+  |> fun next ->
+    Seq.initInfinite ignore
+    |> Seq.takeWhile (fun () -> next.[0])
+    |> Seq.fold (
+      fun current _ ->
+        table.[current]
+        |> fun parent ->
+          (table.[current] <- root)
+          |> fun _ ->
+            if parent = current
+            then (next.[0] <- false) |> fun _ -> current
+            else parent
+    ) x
 
 let kruskal = fun (v: int, edges: seq<int * int * int>, k: int) ->
   ([| v |], [| 0..v |])
@@ -38,12 +60,12 @@ let kruskal = fun (v: int, edges: seq<int * int * int>, k: int) ->
     |> Seq.sortBy(fun (_, _, c) -> c)
     |> Seq.takeWhile (fun _ -> cnt.[0] > k)
     |> Seq.fold (fun cost (a, b, c) ->
-      (findRoot table a, findRoot table b)
-      |> fun (rA, rB) ->
+      (findTree table a)
+      |> fun rA ->
+        (updateRoot table b rA)
+        |> fun rB ->
         if (rA <> rB)
-        then
-          ((table.[rB] <- rA), (cnt.[0] <- cnt.[0] - 1))
-          |> fun _ -> cost + int64 c
+        then (cnt.[0] <- cnt.[0] - 1) |> fun _ -> cost + int64 c
         else cost
     ) 0L
 
@@ -52,4 +74,4 @@ let kruskal = fun (v: int, edges: seq<int * int * int>, k: int) ->
 |> kruskal
 |> printfn "%d"
 
-// https://atcoder.jp/contests/joisc2010/submissions/23663414
+// https://atcoder.jp/contests/joisc2010/submissions/23729904
