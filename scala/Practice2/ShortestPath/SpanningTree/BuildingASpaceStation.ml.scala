@@ -37,7 +37,7 @@ object Main {
         .let((i, j, _) :: edges)
     }
 
-  val findRoot = (table: Array[Int], x: Int) =>
+  val findTree = (table: Array[Int], x: Int) =>
     Array(true).let(next =>
       Stream.continually(0)
         .takeWhile(_x => next(0))
@@ -48,31 +48,22 @@ object Main {
         )
         .reverse
         .toList
-        .let(tree =>
-          tree.tail
-            .foreach(item => table(item) = tree.head)
-            .let(_x => tree.head)
-        )
+    )
+
+  val findRoot = (table: Array[Int], x: Int) =>
+    findTree(table, x).let(tree =>
+      tree.tail
+        .foreach(item => table(item) = tree.head)
+        .let(_x => tree.head)
     )
 
   val updateRoot = (table: Array[Int], x: Int, newRoot: Int) =>
-    Array(true).let(next =>
-      Stream.continually(0)
-        .takeWhile(_x => next(0))
-        .scanLeft(x)((current, _x) =>
-          table(current).let(parent =>
-            (if (parent == current) next(0) = false).let(_x => parent)
-          )
-        )
-        .reverse
-        .toList
-        .let(tree =>
-          tree.head.let(oldRoot =>
-            tree
-              .foreach(item => table(item) = newRoot)
-              .let(_x => oldRoot)
-          )
-        )
+    findTree(table, x).let(tree =>
+      tree.head.let(oldRoot =>
+        tree
+          .foreach(item => table(item) = newRoot)
+          .let(_x => oldRoot)
+      )
     )
 
   val kruskal = (v: Int, edges: List[Tuple3[Int, Int, Double]]) =>
@@ -104,5 +95,5 @@ object Main {
   )
 }
 
-// https://judge.u-aizu.ac.jp/onlinejudge/review.jsp?rid=5645191
-// https://onlinejudge.u-aizu.ac.jp/recent_judges/1127/judge/5645191/dsudo/Scala
+// https://judge.u-aizu.ac.jp/onlinejudge/review.jsp?rid=5646653
+// https://onlinejudge.u-aizu.ac.jp/recent_judges/1127/judge/5646653/dsudo/Scala
