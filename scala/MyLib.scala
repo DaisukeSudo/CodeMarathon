@@ -59,3 +59,13 @@ Array.range(0, n)
     |> (_ => fn(1, 10))
   ))
 )
+
+// ----- 関数 -----
+
+// 2点間の距離（2次元座標）
+val distance2 = (v1: Array[Double], v2: Array[Double]) =>
+  List.range(0, 2).map(i => v1(i) - v2(i)).map(x => x * x).sum.let(sqrt)
+
+// 2点間の距離（3次元座標）
+val distance3 = (v1: Array[Double], v2: Array[Double]) =>
+  List.range(0, 3).map(i => v1(i) - v2(i)).map(x => x * x).sum.let(sqrt)
