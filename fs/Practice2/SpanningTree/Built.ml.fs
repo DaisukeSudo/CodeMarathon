@@ -68,17 +68,18 @@ let updateRoot = fun (table: int []) (newRoot: int) ->
   )
 
 let kruskal = fun (v: int, edges: seq<int * int * int>) ->
-  [| 0..v |]
-  |> fun table ->
+  ([| v - 1 |], [| 0..v |])
+  |> fun (cnt, table) ->
     edges
     |> Seq.sortBy(fun (_, _, c) -> c)
+    |> Seq.takeWhile (fun _ -> cnt.[0] > 0)
     |> Seq.fold (fun cost (a, b, c) ->
       (findRoot table a)
       |> fun rA ->
         (updateRoot table rA b)
         |> fun rB ->
           if (rA <> rB)
-          then cost + int64 c
+          then (cnt.[0] <- cnt.[0] - 1) |> fun _ -> cost + int64 c
           else cost
     ) 0L
 
@@ -88,4 +89,4 @@ let kruskal = fun (v: int, edges: seq<int * int * int>) ->
 |> kruskal
 |> printfn "%d"
 
-// https://atcoder.jp/contests/abc065/submissions/24159032
+// https://atcoder.jp/contests/abc065/submissions/24159776
