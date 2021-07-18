@@ -1,6 +1,6 @@
 // https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=NTL_1_A
 
-import scala.math.{floor, sqrt}
+import scala.math.sqrt
 
 object Main {
 
@@ -10,34 +10,24 @@ object Main {
 
   val readInput = () => io.StdIn.readLine.toInt
 
-  val upperLimit = (x: Int) => sqrt(x).toInt
-
-  val isPrimeNumber = (x: Int, ps: List[Int]) =>
-    upperLimit(x) |> (ul => ps.filter(_ <= ul).forall(x % _ != 0))
-
-  val primeNumbers = () =>
-    Array(List(2)) |> ((ps) =>
+  val solve = (n: Int) =>
+    (Array(List.empty[Int]), Array(n)) |> { case (acc, r) => (
       Stream.empty
         .append(Stream(2))
-        .append(
-          for (x <- Stream.from(3) if isPrimeNumber(x, ps(0)))
-          yield (ps(0) = x::ps(0)) |> (_x => x)
-        )
-    )
-
-  val solve = (n: Int) =>
-    Array(n) |> (r =>
-      primeNumbers()
-        .takeWhile(_x => r(0) > 1)
-        .flatMap(p =>
-          Stream.continually(p)
+        .append(for (i <- 3 to sqrt(n).toInt by 2) yield i)
+        .foreach(i =>
+          Stream.continually(i)
             .takeWhile(r(0) % _ == 0)
-            .map(p => (r(0) = r(0) / p) |> (_x => p))
+            .foreach(p =>
+              ((acc(0) = p::acc(0)), (r(0) = r(0) / p))
+            )
         )
-    )
+        |> (_x => if (r(0) > 1) acc(0) = r(0)::acc(0))
+        |> (_x => acc(0).reverse)
+    )}
 
-  val format = (n: Int, answers: Stream[Int]) =>
-    s"${n}: ${answers.toArray.mkString(" ")}"
+  val format = (n: Int, answers: List[Int]) =>
+    s"${n}: ${answers.mkString(" ")}"
 
   def main(args: Array[String]) = (
     readInput()
@@ -46,4 +36,5 @@ object Main {
   )
 }
 
-// https://judge.u-aizu.ac.jp/onlinejudge/review.jsp?rid=5704579
+// https://judge.u-aizu.ac.jp/onlinejudge/review.jsp?rid=5705064
+// https://onlinejudge.u-aizu.ac.jp/status/users/dsudo/submissions/1/NTL_1_A/judge/5705064/Scala
