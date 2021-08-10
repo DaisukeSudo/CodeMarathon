@@ -243,25 +243,6 @@ let groupCountToArray : (seq<int> -> int []) =
     ) (Array.create (arr |> Seq.length) 0)
 
 
-// ----- 再帰 -----
-
-(
-  [| fun _ _ -> 0 |]
-)
-|> fun (fnc: (int -> int -> int) []) ->
-  (
-    fun start count ->
-      printfn "%d" count
-      if count = 1
-      then start
-      else (fnc.[0] start (count - 1))
-  )
-  |> fun fn ->
-    (fnc.[0] <- fn)
-    |> fun () -> fn 123 10
-|> printfn "%d"
-
-
 // ----- マッチング -----
 
 let match0 =
@@ -294,6 +275,39 @@ let matchOP =
     match ox with
     | Some x -> string x
     | None -> "None"
+
+
+// ----- 再帰 -----
+
+(
+  [| fun _ _ -> 0 |]
+)
+|> fun (fnc: (int -> int -> int) []) ->
+  (
+    fun start count ->
+      printfn "%d" count
+      if count = 1
+      then start
+      else (fnc.[0] start (count - 1))
+  )
+  |> fun fn ->
+    (fnc.[0] <- fn)
+    |> fun () -> fn 123 10
+|> printfn "%d"
+
+// べき乗
+let power =
+  fun p ->
+    ([| fun _ _ -> 0L |])
+    |> fun (fnc: (int64 -> int64 -> int64) []) ->
+      (
+        fun (m: int64) (n: int64) ->
+          match n with
+          | _ when n = 0L -> 1L
+          | _ when n % 2L = 0L -> fnc.[0] m (n / 2L) |> (fun x -> x * x % p)
+          | _ -> m * fnc.[0] m (n - 1L) % p
+      )
+      |> fun fn -> (fnc.[0] <- fn) |> fun () -> fn
 
 
 // ----- 関数 -----
