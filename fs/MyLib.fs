@@ -295,20 +295,6 @@ let matchOP =
     |> fun () -> fn 123 10
 |> printfn "%d"
 
-// べき乗
-let power =
-  fun p ->
-    ([| fun _ _ -> 0L |])
-    |> fun (fnc: (int64 -> int64 -> int64) []) ->
-      (
-        fun (m: int64) (n: int64) ->
-          match n with
-          | _ when n = 0L -> 1L
-          | _ when n % 2L = 0L -> fnc.[0] m (n / 2L) |> (fun x -> x * x % p)
-          | _ -> m * fnc.[0] m (n - 1L) % p
-      )
-      |> fun fn -> (fnc.[0] <- fn) |> fun () -> fn
-
 
 // ----- 関数 -----
 
@@ -325,3 +311,44 @@ let canFormSquare =
       (set |> Set.contains (x1 - y1 + y2, y1 - x2 + x1)) &&
       (set |> Set.contains (x2 - y1 + y2, y2 - x2 + x1))
     )
+
+// mod p の世界
+let p = 1_000_000_007L
+
+// べき乗
+let power : int64 -> int64 -> int64 =
+  ([| fun _ _ -> 0L |])
+  |> fun fnc ->
+    (
+      fun m n ->
+        match n with
+        | _ when n = 0L -> 1L
+        | _ when n % 2L = 0L -> fnc.[0] m (n / 2L) |> (fun x -> x * x % p)
+        | _ -> m * fnc.[0] m (n - 1L) % p
+    )
+    |> fun fn -> (fnc.[0] <- fn) |> fun () -> fn
+// power 2L 10L |> printfn "%d"
+
+// 逆元
+let inverse = fun b -> power b (p - 2L)
+
+// mod p における割り算
+let modDiv = fun a b -> a * (inverse b) % p
+
+// 順列
+let permutation = fun n r -> seq {0L..(r - 1L)} |> Seq.fold (fun acc i -> acc * (n - i) % p) 1L
+// permutation 6L 3L // 120L
+
+// 組合せ
+let combination = fun n r ->
+  (
+    permutation n r,
+    permutation r r
+  )
+  |> fun (a, b) -> modDiv a b
+// combination 6L 3L // 20L
+
+// 階乗
+let factorial = fun n -> [2L..n] |> List.fold (fun acc i -> acc * i % p) 1L
+let factorial = fun n -> permutation n (n - 1L)
+// factorial 5L // 120L
