@@ -352,3 +352,35 @@ let combination = fun n r ->
 let factorial = fun n -> [2L..n] |> List.fold (fun acc i -> acc * i % p) 1L
 let factorial = fun n -> permutation n (n - 1L)
 // factorial 5L // 120L
+
+// 最大公約数（再帰版）
+let gcd_rec =
+  [| fun _ _ -> LanguagePrimitives.GenericZero |]
+  |> fun fnc ->
+    (
+      fun a b -> if b = LanguagePrimitives.GenericZero then a else fnc.[0] b (a % b)
+    )
+    |> fun fn ->
+      (fnc.[0] <- fn)
+      |> fun () ->
+        fun a b -> fn (max a b) (min a b)
+
+// 最大公約数（ループ版）
+let gcd =
+  fun a b ->
+    ([| (max a b, min a b) |])
+    |> fun box ->
+      Seq.initInfinite (fun _ -> box.[0])
+      |> Seq.takeWhile (fun (_, b) -> b > LanguagePrimitives.GenericZero)
+      |> Seq.iter (
+        fun (a, b) -> box.[0] <- (b, a % b)
+      )
+      |> fun _ -> box.[0] |> fst
+
+// 最小公倍数
+let lcm =
+  fun a b ->
+    a * b / gcd a b
+
+// 
+let to2 = fun (x: int) -> System.Convert.ToString (x, 2) |> int
