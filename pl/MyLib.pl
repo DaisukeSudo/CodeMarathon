@@ -124,3 +124,29 @@ combinePair1(_, [], []).
 combinePair1(A, [B|Bs], [C|Cs]) :-
   C = (A, B),
   combinePair1(A, Bs, Cs).
+
+map(_P, [], []).
+map(P, [H1|Ts1], [H2|Ts2]) :-
+  call(P, H1, H2),
+  map(P, Ts1, Ts2).
+
+foldl(P, [H|Ts], A, R) :-
+  call(P, A, H, A2),
+  foldl(P, Ts, A2, R).
+foldl(_P, [], R, R).
+
+reduce(P, [H|Ts], R) :-
+  foldl(P, Ts, H, R).
+
+unique([], []).
+unique([H|Ts1], [H|Ts2]) :-
+  delete(Ts1, H, Vs),
+  unique(Vs, Ts2).
+
+
+% ----- 関数 -----
+
+gcd(A, 0, A).
+gcd(A, B, R) :- B > 0, M is A mod B, gcd(B, M, R).
+
+lcm(A, B, R) :- gcd(A, B, G), R is A * B / G.
