@@ -31,7 +31,7 @@ lcm(A, B, R) :- gcd(A, B, G), R is A * B / G.
 
 count(M, As, R) :-
   reduce(lcm, As, L),
-  R is (integer((M << 1) / L) + 1) >> 1.
+  R is (div(M << 1, L) + 1) >> 1.
 
 are_same_2s(As) :-
   convlist([X, Y] >> (Y is lsb(X)), As, Bs),
@@ -52,4 +52,4 @@ main :-
 
 :- main.
 
-% https://atcoder.jp/contests/abc150/submissions/29970833
+% https://atcoder.jp/contests/abc150/submissions/29970891
