@@ -14,16 +14,6 @@ read_numbers(N, [X|Xs]) :-
   N1 is N - 1,
   read_numbers(N1, Xs).
 
-map(_P, [], []).
-map(P, [H1|Ts1], [H2|Ts2]) :-
-  call(P, H1, H2),
-  map(P, Ts1, Ts2).
-
-foldl(P, [H|Ts], A, R) :-
-  call(P, A, H, A2),
-  foldl(P, Ts, A2, R).
-foldl(_P, [], R, R).
-
 reduce(P, [H|Ts], R) :-
   foldl(P, Ts, H, R).
 
@@ -43,16 +33,13 @@ count(M, As, R) :-
   reduce(lcm, As, L),
   R is (integer((M << 1) / L) + 1) >> 1.
 
-bump(A, R) :-
-  R is A /\ -A.
-
-areSame2s(As) :-
-  map(bump, As, Us),
-  unique(Us, Vs),
-  length(Vs, 1).
+are_same_2s(As) :-
+  convlist([X, Y] >> (Y is lsb(X)), As, Bs),
+  unique(Bs, Cs),
+  length(Cs, 1).
 
 solve(M, As, R) :-
-  areSame2s(As) ->
+  are_same_2s(As) ->
     count(M, As, R);
     R is 0.
 
@@ -65,4 +52,4 @@ main :-
 
 :- main.
 
-% https://atcoder.jp/contests/abc150/submissions/29936877
+% https://atcoder.jp/contests/abc150/submissions/29970833
