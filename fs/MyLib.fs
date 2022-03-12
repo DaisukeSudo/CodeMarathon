@@ -382,5 +382,8 @@ let lcm =
   fun a b ->
     a * b / gcd a b
 
-// 
-let to2 = fun (x: int) -> System.Convert.ToString (x, 2) |> int
+// 何回２で割れるか
+let countDivisibleBy2 =
+  fun x ->
+    System.Convert.ToString(x, 2)
+    |> fun x -> x.Length - x.LastIndexOf('1') - 1
