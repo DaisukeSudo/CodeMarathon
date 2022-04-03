@@ -101,8 +101,8 @@ let groupCount : (seq<'a> -> Map<'a, int>) =
     |> Seq.map (fun (k, v) -> (k, v |> Seq.length))
     |> Map.ofSeq
 
-// 組み合わせ：ペア
-let combinePair : seq<'a> -> seq<'b> -> seq<'a * 'b> =
+// 掛け合わせ
+let multiplyZip : seq<'a> -> seq<'b> -> seq<'a * 'b> =
   fun arr1 arr2 ->
     arr1
     |> Seq.collect (
@@ -111,8 +111,8 @@ let combinePair : seq<'a> -> seq<'b> -> seq<'a * 'b> =
         |> Seq.map (fun x2 -> (x1, x2))
     )
 
-// 組み合わせ（from < to）
-let combinePairHalf : seq<'a> -> seq<'a> -> seq<'a * 'a> =
+// 掛け合わせ（from < to）
+let multiplyZipHalf : seq<'a> -> seq<'a> -> seq<'a * 'a> =
   fun fromArr toArr ->
     fromArr
     |> Seq.collect (
@@ -122,13 +122,13 @@ let combinePairHalf : seq<'a> -> seq<'a> -> seq<'a * 'a> =
         |> Seq.map (fun x2 -> (x1, x2))
     )
 
-// 組み合わせ：ペア：サンプル
-combinePair [1..9] [1..9]
+// 掛け合わせ：サンプル
+multiplyZip [1..9] [1..9]
 // |> Seq.filter (fun (a, b) -> f1 (a, b) <> f2 (a, b))
 |> Seq.iter (printfn "%A")
 
-// 組み合わせ：順列
-let combineSequence =
+// 順列
+let permutationSequence =
   fun list ->
     list
     |> Seq.tail
@@ -143,9 +143,26 @@ let combineSequence =
         )
     ) (list |> Seq.map (fun x -> [x]))
 
-// 組み合わせ：順列：サンプル
-combineSequence [1..4]
+// 順列：サンプル
+permutationSequence [1..4]
 |> Seq.iter (printfn "%A")
+
+// 選択パターン ※ O(2^N)
+let choosePattern : seq<'a> -> seq<'a list> =
+  fun arr ->
+    seq {0..(1 <<< Seq.length arr) - 1} |> Seq.map (fun i ->
+      arr |> Seq.fold (fun (j, acc) x ->
+        if (i >>> j) &&& 1 = 1
+        then (j + 1, x :: acc)
+        else (j + 1, acc)
+      ) (0, [])
+      |> snd
+      |> List.rev
+    )
+
+// 選択パターン：サンプル
+choosePattern [1; 2; 3] |> Seq.toList |> printfn "%A"
+// [[]; [1]; [2]; [1; 2]; [3]; [1; 3]; [2; 3]; [1; 2; 3]]
 
 // 連続する同値を除去
 let looseDistinct: 'a [] -> 'a [] =
@@ -297,6 +314,9 @@ let matchOP =
 
 
 // ----- 関数 -----
+
+// 割って切り上げ
+let roundup = fun a b -> a / b + if a % b = LanguagePrimitives.GenericZero then LanguagePrimitives.GenericZero else LanguagePrimitives.GenericOne
 
 // 2点間の距離
 let distance = fun (x1, y1) (x2, y2) -> ((x2 - x1) ** 2. + (y2 - y1) ** 2.) |> sqrt
