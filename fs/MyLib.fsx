@@ -202,9 +202,7 @@ let updateArrayB : int -> 'a -> 'a [] -> 'a [] =
 // ２次元配列の作成
 let createArray2 : int -> int -> 'a -> 'a [] [] =
   fun iSize jSize value ->
-    value
-    |> Array.create jSize
-    |> Array.create iSize
+    Array.init iSize (fun _ -> Array.create jSize value)
 
 // ２次元配列の更新
 let updateArray2 : int -> int -> 'a -> 'a [] [] -> 'a [] [] =
@@ -369,7 +367,7 @@ let combination = fun n r ->
 // combination 6L 3L // 20L
 
 // 階乗
-let factorial = fun n -> [2L..n] |> List.fold (fun acc i -> acc * i % p) 1L
+// let factorial = fun n -> [2L..n] |> List.fold (fun acc i -> acc * i % p) 1L
 let factorial = fun n -> permutation n (n - 1L)
 // factorial 5L // 120L
 
@@ -404,6 +402,6 @@ let lcm =
 
 // 何回２で割れるか
 let countDivisibleBy2 =
-  fun x ->
+  fun (x: int) ->
     System.Convert.ToString(x, 2)
     |> fun x -> x.Length - x.LastIndexOf('1') - 1
