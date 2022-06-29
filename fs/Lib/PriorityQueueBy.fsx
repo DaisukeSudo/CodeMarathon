@@ -1,6 +1,6 @@
-let priorityQueue<'a when 'a : comparison> =
-  fun () ->
-    (new System.Collections.Generic.List<'a>())
+let priorityQueueBy<'a, 'b when 'b : comparison> =
+  fun (pred : 'a -> 'b) ->
+    (new System.Collections.Generic.List<('a * 'b)>())
     |> fun binaryHeap ->
       (
         (* enqueue *)
@@ -8,10 +8,10 @@ let priorityQueue<'a when 'a : comparison> =
           fun elem ->
             (
               [| binaryHeap.Count |],
-              (binaryHeap.Add(elem))
+              (binaryHeap.Add((elem, pred elem)))
             )
             |> fun (x, _) ->
-              Seq.initInfinite ignore
+              Seq.initInfinite id
               |> Seq.takeWhile (fun _ -> x.[0] > 0)
               |> Seq.iter (
                 fun _ ->
@@ -22,7 +22,7 @@ let priorityQueue<'a when 'a : comparison> =
                   |> fun (i, j) ->
                     (binaryHeap.[i], binaryHeap.[j])
                     |> fun (a, b) ->
-                      if a > b
+                      if (a |> snd) > (b |> snd)
                       then
                         (
                           (binaryHeap.[i] <- b),
@@ -39,7 +39,7 @@ let priorityQueue<'a when 'a : comparison> =
             (binaryHeap.Count - 1)
             |> fun n ->
               (
-                (binaryHeap.[0]),
+                (binaryHeap.[0] |> fst),
                 (binaryHeap.[0] <- binaryHeap.[n]),
                 (binaryHeap.RemoveAt(n)),
                 [| 0 |]
@@ -50,11 +50,11 @@ let priorityQueue<'a when 'a : comparison> =
                 |> Seq.takeWhile (fun (_, j) -> j < n)
                 |> Seq.iter (
                   fun (i, j) ->
-                    (if j = n - 1 || binaryHeap.[j] > binaryHeap.[j + 1] then j else j + 1)
+                    (if j = n - 1 || (binaryHeap.[j] |> snd) > (binaryHeap.[j + 1] |> snd) then j else j + 1)
                     |> fun j ->
                       (binaryHeap.[i], binaryHeap.[j])
                       |> fun (a, b) ->
-                        if a < b
+                        if (a |> snd) < (b |> snd)
                         then
                           (
                             (binaryHeap.[i] <- b),
@@ -72,11 +72,11 @@ let priorityQueue<'a when 'a : comparison> =
         ),
         (* queue *)
         (
-          fun () -> binaryHeap |> List.ofSeq
+          fun () -> binaryHeap |> Seq.map fst |> List.ofSeq
         )
       )
 
-priorityQueue()
+priorityQueueBy ((*) -1)
 |> fun (enqueue, dequeue, isEmpty, queue) ->
   [1..9]
   |> Seq.iter (
@@ -95,36 +95,36 @@ priorityQueue()
 // enqueue 1
 // [1]
 // enqueue 2
-// [2; 1]
+// [1; 2]
 // enqueue 3
-// [3; 1; 2]
+// [1; 2; 3]
 // enqueue 4
-// [4; 3; 2; 1]
+// [1; 2; 3; 4]
 // enqueue 5
-// [5; 4; 2; 1; 3]
+// [1; 2; 3; 4; 5]
 // enqueue 6
-// [6; 4; 5; 1; 3; 2]
+// [1; 2; 3; 4; 5; 6]
 // enqueue 7
-// [7; 4; 6; 1; 3; 2; 5]
+// [1; 2; 3; 4; 5; 6; 7]
 // enqueue 8
-// [8; 7; 6; 4; 3; 2; 5; 1]
+// [1; 2; 3; 4; 5; 6; 7; 8]
 // enqueue 9
-// [9; 8; 6; 7; 3; 2; 5; 1; 4]
-// dequeue 9
-// [8; 7; 6; 4; 3; 2; 5; 1]
-// dequeue 8
-// [7; 4; 6; 1; 3; 2; 5]
-// dequeue 7
-// [6; 4; 5; 1; 3; 2]
-// dequeue 6
-// [5; 4; 2; 1; 3]
-// dequeue 5
-// [4; 3; 2; 1]
-// dequeue 4
-// [3; 1; 2]
-// dequeue 3
-// [2; 1]
-// dequeue 2
-// [1]
+// [1; 2; 3; 4; 5; 6; 7; 8; 9]
 // dequeue 1
+// [2; 4; 3; 8; 5; 6; 7; 9]
+// dequeue 2
+// [3; 4; 6; 8; 5; 9; 7]
+// dequeue 3
+// [4; 5; 6; 8; 7; 9]
+// dequeue 4
+// [5; 7; 6; 8; 9]
+// dequeue 5
+// [6; 7; 9; 8]
+// dequeue 6
+// [7; 8; 9]
+// dequeue 7
+// [8; 9]
+// dequeue 8
+// [9]
+// dequeue 9
 // []
