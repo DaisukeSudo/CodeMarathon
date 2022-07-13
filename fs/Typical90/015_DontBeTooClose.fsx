@@ -2,15 +2,16 @@
 
 let p = 1_000_000_007L
 
-let rec power m n =
-  match n with
-  | _ when n = 0L -> 1L
-  | _ when n % 2L = 0L ->
-    let x = power m (n / 2L)
-    x * x % p
-  | _ ->
-    let x = power m (n - 1L)
-    m * x % p
+let inline power m n =
+  let mutable m = m
+  let mutable n = n
+  let mutable ret = 1L
+  while n > 0L do
+    if n &&& 1L = 1L then
+      ret <- ret * m % p
+    m <- m * m % p
+    n <- n >>> 1
+  ret
 
 let inline inverse b = power b (p - 2L)
 
@@ -40,4 +41,4 @@ seq {1..n}
 |> Seq.map (query n)
 |> Seq.iter stdout.WriteLine
 
-// https://atcoder.jp/contests/typical90/submissions/33185785
+// https://atcoder.jp/contests/typical90/submissions/33202421
