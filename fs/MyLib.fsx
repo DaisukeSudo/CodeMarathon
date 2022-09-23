@@ -185,6 +185,14 @@ Seq.initInfinite (fun i -> (i, "ora"))
 
 // ----- 配列 -----
 
+// 番兵
+let guard terminator arr =
+  Array.concat [ [| terminator |]; arr; [| terminator |] ]
+
+// 番兵（２次元配列）
+let guard2 terminator count initializer =
+  Array.init count (initializer >> guard terminator) |> guard (Array.create (count + 2) terminator)
+
 // 配列の前後に最初と最後の要素を追加
 let reinforce: 'a [] -> 'a [] =
   fun arr -> Array.concat [[| arr.[0] |]; arr; [| arr.[arr.Length - 1] |]]
