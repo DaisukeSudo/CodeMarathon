@@ -14,3 +14,6 @@ memo
 |> Seq.filter (fun x -> x >= k)
 |> Seq.length
 |> stdout.WriteLine
+
+// https://atcoder.jp/contests/typical90/submissions/36342597
+// https://atcoder.jp/contests/typical90/submissions/36342684
