@@ -128,20 +128,14 @@ multiplyZip [1..9] [1..9]
 |> Seq.iter (printfn "%A")
 
 // 順列
-let permutationSequence =
-  fun list ->
-    list
-    |> Seq.tail
-    |> Seq.fold (
-      fun acc i ->
-        acc
-        |> Seq.collect (
-          fun cs ->
-            list
-            |> Seq.except cs
-            |> Seq.map (fun x -> cs @ [x])
-        )
-    ) (list |> Seq.map (fun x -> [x]))
+let permutationSequence : ('a list -> seq<'a list>) =
+  let rec loop1 x = function
+    | []              -> [[x]]
+    | (y :: ys) as xs -> (x :: xs) :: (List.map (fun x -> y :: x) (loop1 x ys))
+  let rec loop2 = function
+    | []      -> seq [List.empty]
+    | x :: xs -> Seq.collect (loop1 x) (loop2 xs)
+  loop2
 
 // 順列：サンプル
 permutationSequence [1..4]
