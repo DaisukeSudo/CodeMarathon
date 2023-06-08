@@ -14,4 +14,4 @@ for i in [4 .. n - 1] do
 
 ans |> stdout.WriteLine
 
-// https://atcoder.jp/contests/typical90/submissions/41890836
+// https://atcoder.jp/contests/typical90/submissions/42071386
