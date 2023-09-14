@@ -407,3 +407,15 @@ let countDivisibleBy2 =
   fun (x: int) ->
     System.Convert.ToString(x, 2)
     |> fun x -> x.Length - x.LastIndexOf('1') - 1
+
+// 繰り返し二乗法
+let binPow _a _b =
+  let mutable a = _a
+  let mutable b = _b
+  let mutable ans = 1L
+  while b <> 0L do
+    if b % 2L = 1L then
+      ans <- ans * a % p
+    a <- a * a % p
+    b <- b / 2L
+  ans
