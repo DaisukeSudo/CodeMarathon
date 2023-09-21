@@ -60,21 +60,16 @@ seq {1..9}
 |> printfn "%d"
 
 // 平均値
-let mean =
-  fun list ->
-    list |> Seq.averageBy float |> int
+let mean list =
+  list |> Seq.averageBy float |> int
 
 // 中央値
-let median =
-  fun list ->
-    (
-      list |> Seq.sort |> Seq.toArray,
-      list |> Seq.length
-    )
-    |> fun (arr, len) ->
-      if len % 2 = 0
-      then (arr.[len / 2] + arr.[len / 2 + 1]) / 2
-      else arr.[len / 2]
+let median list =
+  let a = list |> Seq.sort |> Seq.toArray
+  let l = list |> Seq.length
+  if l % 2 = 0
+  then (a.[l / 2 - 1] + a.[l / 2]) / 2.
+  else a.[l / 2]
 
 // 最小値またはデフォルト
 let minOrDefault : 'a -> seq<'a> -> 'a =
