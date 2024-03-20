@@ -1,12 +1,5 @@
 // https://atcoder.jp/contests/arc004/tasks/arc004_1
 
-// 3
-// 1 1
-// 2 4
-// 4 3
-
-// ----
-
 stdin.ReadLine()
 |> int
 |> fun x -> [1..x]
