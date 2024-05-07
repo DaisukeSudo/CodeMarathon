@@ -136,6 +136,18 @@ let permutationSequence : ('a list -> seq<'a list>) =
 permutationSequence [1..4]
 |> Seq.iter (printfn "%A")
 
+// n個を選ぶ順列
+let permuteN n xs =
+  let rec dist e = function
+    | []    -> [[e]]
+    | x :: xs -> (e :: x :: xs) :: [for ys in dist e xs -> x :: ys]
+  let rec _permuteN n xs =
+    match (n, xs) with
+    | (0, _)       -> [[]]
+    | (_, [])      -> []
+    | (_, x :: xs) -> (_permuteN n xs) @ (List.collect (dist x) (_permuteN (n - 1) xs))
+  _permuteN n xs
+
 // 選択パターン ※ O(2^N)
 let choosePattern : seq<'a> -> seq<'a list> =
   fun arr ->
