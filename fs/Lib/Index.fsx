@@ -123,7 +123,7 @@ multiplyZip [1..9] [1..9]
 |> Seq.iter (printfn "%A")
 
 // 順列
-let permutationSequence : ('a list -> seq<'a list>) =
+let permute : ('a list -> seq<'a list>) =
   let rec loop1 x = function
     | []              -> [[x]]
     | (y :: ys) as xs -> (x :: xs) :: (List.map (fun x -> y :: x) (loop1 x ys))
@@ -133,7 +133,7 @@ let permutationSequence : ('a list -> seq<'a list>) =
   loop2
 
 // 順列：サンプル
-permutationSequence [1..4]
+permute [1..4]
 |> Seq.iter (printfn "%A")
 
 // n個を選ぶ順列
