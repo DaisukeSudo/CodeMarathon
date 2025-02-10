@@ -1,4 +1,4 @@
-let lowerBound<'a when 'a : comparison> (arr: 'a array) (v: 'a) =
+let lowerBound<'a when 'a : comparison> (v: 'a) (arr: 'a array) =
   let mutable li = 0
   let mutable ri = arr.Length - 1
   while li <= ri do
@@ -9,10 +9,10 @@ let lowerBound<'a when 'a : comparison> (arr: 'a array) (v: 'a) =
         li <- mi + 1
   li
 
-// lowerBound [| 1; 2; 3; 3; 3; 4; 5; 5; 6 |] 3 ;;
+// [| 1; 2; 3; 3; 3; 4; 5; 5; 6 |] |> lowerBound 3 ;;
 // 2
 
-let upperBound<'a when 'a : comparison> (arr: 'a array) (v: 'a) =
+let upperBound<'a when 'a : comparison> (v: 'a) (arr: 'a array) =
   let mutable li = 0
   let mutable ri = arr.Length - 1
   while li <= ri do
@@ -23,5 +23,5 @@ let upperBound<'a when 'a : comparison> (arr: 'a array) (v: 'a) =
       li <- mi + 1
   li
 
-// upperBound [| 1; 2; 3; 3; 3; 4; 5; 5; 6 |] 3 ;;
+// [| 1; 2; 3; 3; 3; 4; 5; 5; 6 |] |> upperBound 3 ;;
 // 5
