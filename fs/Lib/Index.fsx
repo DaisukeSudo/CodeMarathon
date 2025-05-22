@@ -343,36 +343,27 @@ let canFormSquare =
 let p = 1_000_000_007L
 
 // べき乗
-let power : int64 -> int64 -> int64 =
-  ([| fun _ _ -> 0L |])
-  |> fun fnc ->
-    (
-      fun m n ->
-        match n with
-        | _ when n = 0L -> 1L
-        | _ when n % 2L = 0L -> fnc.[0] m (n / 2L) |> (fun x -> x * x % p)
-        | _ -> m * fnc.[0] m (n - 1L) % p
-    )
-    |> fun fn -> (fnc.[0] <- fn) |> fun () -> fn
+let power =
+  let rec loop m n =
+    match n with
+    | _ when n = 0L -> 1L
+    | _ when n % 2L = 0L -> loop m (n / 2L) |> (fun x -> x * x % p)
+    | _ -> m * loop m (n - 1L) % p
+  loop
 // power 2L 10L |> printfn "%d"
 
 // 逆元
-let inverse = fun b -> power b (p - 2L)
+let inverse b = power b (p - 2L)
 
 // mod p における割り算
-let modDiv = fun a b -> a * (inverse b) % p
+let modDiv a b = a * (inverse b) % p
 
 // 順列
-let permutation = fun n r -> seq {0L..(r - 1L)} |> Seq.fold (fun acc i -> acc * (n - i) % p) 1L
+let permutation n r = seq { 0L .. (r - 1L) } |> Seq.fold (fun acc i -> acc * (n - i) % p) 1L
 // permutation 6L 3L // 120L
 
 // 組合せ
-let combination = fun n r ->
-  (
-    permutation n r,
-    permutation r r
-  )
-  |> fun (a, b) -> modDiv a b
+let combination n r = (permutation n r, permutation r r) ||> modDiv
 // combination 6L 3L // 20L
 
 // 階乗
@@ -416,13 +407,28 @@ let countDivisibleBy2 =
     |> fun x -> x.Length - x.LastIndexOf('1') - 1
 
 // 繰り返し二乗法
-let binPow _a _b =
-  let mutable a = _a
-  let mutable b = _b
+let binPow a b =
+  let mutable a = a
+  let mutable b = b
   let mutable ans = 1L
   while b <> 0L do
     if b % 2L = 1L then
       ans <- ans * a % p
     a <- a * a % p
     b <- b / 2L
+  ans
+
+// 素因数分解
+let factorize n =
+  let mutable x = n
+  let mutable ans = []
+  let z = int64 (sqrt (float n)) + 1L
+  for i in 2L :: [3L .. 2L .. z] do
+    let rec loop () =
+      if x % i = 0L then
+        x <- x / i
+        ans <- i :: ans
+        loop ()
+    loop ()
+  if x <> 1L then ans <- x :: ans
   ans
