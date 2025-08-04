@@ -3,5 +3,6 @@ null/
 target/
 project/
 
+.bloop/
 .metals/
 .scala-build/
