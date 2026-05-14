@@ -1,37 +1,28 @@
 let unionFindTree n =
   let mutable cnt = n
-  let tbl = [| 0..n - 1 |]
+  let parent = [| 0..n - 1 |]
+  let rank = Array.zeroCreate n
 
-  let findTree x =
-    let mutable next = true
-    Seq.initInfinite ignore
-    |> Seq.takeWhile (fun () -> next)
-    |> Seq.scan (fun c _ ->
-      let parent = tbl.[c]
-      if parent = c then next <- false
-      parent
-    ) x
-    |> Seq.rev
-    |> Seq.toList
-
-  let findRoot =
-    findTree >> (fun tree ->
-      let root = tree |> List.head
-      tree |> List.tail |> List.iter (fun x -> tbl.[x] <- root)
+  let rec findRoot x =
+    if parent.[x] = x then x
+    else
+      let root = findRoot parent.[x]
+      parent.[x] <- root  // path compression
       root
-    )
-
-  let updateRoot newRoot =
-    findTree >> (fun tree ->
-      let oldRoot = tree |> Seq.head
-      tree |> List.iter (fun x -> tbl.[x] <- newRoot)
-      oldRoot
-    )
 
   let unite a b =
     let rA = findRoot a
-    let rB = updateRoot rA b
-    if (rA <> rB) then cnt <- cnt - 1
+    let rB = findRoot b
+    if rA <> rB then
+      // union by rank
+      if rank.[rA] < rank.[rB] then
+        parent.[rA] <- rB
+      elif rank.[rA] > rank.[rB] then
+        parent.[rB] <- rA
+      else
+        parent.[rB] <- rA
+        rank.[rA] <- rank.[rA] + 1
+      cnt <- cnt - 1
     (rA, rB)
 
   let same a b = (findRoot a) = (findRoot b)
