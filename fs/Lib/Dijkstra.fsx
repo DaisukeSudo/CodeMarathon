@@ -40,7 +40,7 @@ let inline priorityQueue () =
 
   (enqueue, dequeue, isEmpty)
 
-let inline djikstra n es s =
+let inline dijkstra n es s =
   let adjacents = Array.create n Map.empty
   es |> Seq.iter (fun (s, e, d) ->
     adjacents.[s] <- adjacents.[s] |> Map.add e d
@@ -86,7 +86,7 @@ let es =
     (5, 6, 3)
   ]
 
-let fn = djikstra n es
+let fn = dijkstra n es
 [0..n - 1] |> List.iter (fun s -> printfn "%d: %A" s (fn s))
 
 // 0: [|0L; 2L; 3L; 4L; 4L; 5L; 8L|]
